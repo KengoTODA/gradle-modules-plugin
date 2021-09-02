@@ -8,7 +8,7 @@ import org.gradle.api.Project;
 import org.gradle.api.UnknownDomainObjectException;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
-import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
 
 import java.io.IOException;
@@ -23,8 +23,8 @@ class ModuleName {
     Optional<String> findModuleName(Project project) {
         SourceSet main;
         try {
-            JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-            main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+            JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+            main = javaPluginExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
         } catch (IllegalStateException | UnknownDomainObjectException e) {
             LOGGER.warn("Cannot obtain JavaPluginConvention", e);
             return Optional.empty();
