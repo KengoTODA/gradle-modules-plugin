@@ -59,7 +59,7 @@ public class CompileModuleInfoTask extends AbstractCompileTask {
             File moduleInfoDir = helper().getModuleInfoDir();
             jar.from(moduleInfoDir);
             jar.doFirst(task -> {
-                File classesDir = helper().mainSourceSet().getJava().getOutputDir();
+                File classesDir = helper().mainSourceSet().getJava().getClassesDirectory().get().getAsFile();
                 File mainModuleInfoFile = new File(classesDir, "module-info.class");
                 File customModuleInfoFile = new File(moduleInfoDir, "module-info.class");
                 if(mainModuleInfoFile.isFile() && customModuleInfoFile.isFile()) {
@@ -82,7 +82,7 @@ public class CompileModuleInfoTask extends AbstractCompileTask {
         compileModuleInfoJava.setSource(pathToModuleInfoJava());
         compileModuleInfoJava.getOptions().setSourcepath(project.files(pathToModuleInfoJava().getParent()));
 
-        compileModuleInfoJava.setDestinationDir(helper().getModuleInfoDir());
+        compileModuleInfoJava.getDestinationDirectory().set(helper().getModuleInfoDir());
 
         // we need all the compiled classes before compiling module-info.java
         compileModuleInfoJava.dependsOn(compileJava);
