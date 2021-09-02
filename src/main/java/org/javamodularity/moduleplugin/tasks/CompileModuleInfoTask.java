@@ -61,12 +61,15 @@ public class CompileModuleInfoTask extends AbstractCompileTask {
             public void execute(Jar jar) {
                 File moduleInfoDir = CompileModuleInfoTask.this.helper().getModuleInfoDir();
                 jar.from(moduleInfoDir);
-                jar.doFirst(task -> {
-                    File classesDir = CompileModuleInfoTask.this.helper().mainSourceSet().getJava().getOutputDir();
-                    File mainModuleInfoFile = new File(classesDir, "module-info.class");
-                    File customModuleInfoFile = new File(moduleInfoDir, "module-info.class");
-                    if (mainModuleInfoFile.isFile() && customModuleInfoFile.isFile()) {
-                        mainModuleInfoFile.delete();
+                jar.doFirst(new Action<Task>() {
+                    @Override
+                    public void execute(Task task) {
+                        File classesDir = CompileModuleInfoTask.this.helper().mainSourceSet().getJava().getOutputDir();
+                        File mainModuleInfoFile = new File(classesDir, "module-info.class");
+                        File customModuleInfoFile = new File(moduleInfoDir, "module-info.class");
+                        if (mainModuleInfoFile.isFile() && customModuleInfoFile.isFile()) {
+                            mainModuleInfoFile.delete();
+                        }
                     }
                 });
             }
